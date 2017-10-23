@@ -181,48 +181,49 @@ C:\arii\jobscheduler\agent2\logs
 La mise à jour est exécutée par '''arii update''':
 
 ```
-arii update 
+ arii update 
+ 
+ --------------------------------------------------
+ -UPDATE-------------------------------------------
+ Already up-to-date.
+ Loading composer repositories with package information
+ Updating dependencies (including require-dev)
+ Package operations: 1 install, 0 updates, 0 removals
+ - Installing dhtmlx/connector-php (2.2.0): Loading from cache
+ Generating autoload files
+ > Incenteev\ParameterHandler\ScriptHandler::buildParameters
+ Updating the "app/config/parameters.yml" file
+ > Sensio\Bundle\DistributionBundle\Composer\ScriptHandler::buildBootstrap
+ > Sensio\Bundle\DistributionBundle\Composer\ScriptHandler::clearCache 
+ 
+ // Clearing the cache for the dev environment with debug true
+ 
+ [OK] Cache for the "dev" environment (debug=true) was successfully cleared.  
+ 
+ > Sensio\Bundle\DistributionBundle\Composer\ScriptHandler::installAssets
+ 
+ Trying to install assets as relative symbolic links.
+ 
+ --------- -------------------------- ------------------
+ 		 Bundle                     Method / Error
+ --------- -------------------------- ------------------
+ WARNING   FrameworkBundle            absolute symlink
+ WARNING   AriiCoreBundle             absolute symlink
+ WARNING   AriiGraphvizBundle         absolute symlink
+ WARNING   AriiATSBundle              absolute symlink
+ WARNING   AriiReportBundle           absolute symlink
+ WARNING   SensioDistributionBundle   absolute symlink
+ --------- -------------------------- ------------------
 
---------------------------------------------------
--UPDATE-------------------------------------------
-Already up-to-date.
-Loading composer repositories with package information
-Updating dependencies (including require-dev)
-Package operations: 1 install, 0 updates, 0 removals
-- Installing dhtmlx/connector-php (2.2.0): Loading from cache
-Generating autoload files
-> Incenteev\ParameterHandler\ScriptHandler::buildParameters
-Updating the "app/config/parameters.yml" file
-> Sensio\Bundle\DistributionBundle\Composer\ScriptHandler::buildBootstrap
-> Sensio\Bundle\DistributionBundle\Composer\ScriptHandler::clearCache
+ [OK] All assets were successfully installed.
+ 
+ > Sensio\Bundle\DistributionBundle\Composer\ScriptHandler::installRequirementsFile
+ > Sensio\Bundle\DistributionBundle\Composer\ScriptHandler::removeSymfonyStandardFiles
+ > Sensio\Bundle\DistributionBundle\Composer\ScriptHandler::prepareDeploymentTarget
 
-// Clearing the cache for the dev environment with debug true
-
-[OK] Cache for the "dev" environment (debug=true) was successfully cleared. 
-
-> Sensio\Bundle\DistributionBundle\Composer\ScriptHandler::installAssets
-
-Trying to install assets as relative symbolic links.
-
---------- -------------------------- ------------------
-		 Bundle                     Method / Error
---------- -------------------------- ------------------
-WARNING   FrameworkBundle            absolute symlink
-WARNING   AriiCoreBundle             absolute symlink
-WARNING   AriiGraphvizBundle         absolute symlink
-WARNING   AriiATSBundle              absolute symlink
-WARNING   AriiReportBundle           absolute symlink
-WARNING   SensioDistributionBundle   absolute symlink
---------- -------------------------- ------------------
-
-[OK] All assets were successfully installed.
-
-> Sensio\Bundle\DistributionBundle\Composer\ScriptHandler::installRequirementsFile
-> Sensio\Bundle\DistributionBundle\Composer\ScriptHandler::removeSymfonyStandardFiles
-> Sensio\Bundle\DistributionBundle\Composer\ScriptHandler::prepareDeploymentTarget
--UPDATE-DB----------------------------------------
-Updating database schema...
-Database schema updated successfully! "1" queries were executed
+ -UPDATE-DB----------------------------------------
+ Updating database schema...
+ Database schema updated successfully! "1" queries were executed
 ```
 
 ## Déplacement
