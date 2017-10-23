@@ -1,13 +1,4 @@
-__NOTOC__
-{|style="float: right; width: 300px; margin: 1em 1em 0.5em 1em;  border: 1px solid #E1E1E1;background: #F9F9F9; padding: 5px 10px; text-align: left;"
- |+[[Fichier:portable.png]]
- !Version portable
- |-
- !Version
- |1.0
- |-
- |colspan="2"| __TOC__ 
-|}Une version portable Windows permet d'utiliser Ari'i à partir d'une clé USB sur n'importe quelle plateforme Windows. La construction de cette installation est documentée pas à pas dans  [[Version Windows portable]].
+Une version portable Windows permet d'utiliser Ari'i à partir d'une clé USB sur n'importe quelle plateforme Windows. La construction de cette installation est documentée pas à pas dans  [[Version Windows portable]].
 
 La structure de la suivante:
  ARII
@@ -29,18 +20,19 @@ La structure de la suivante:
    tmp
    dump
 
-= Installation =
+# Installation
 
-== Copie de fichier ==
+## Copie de fichier
 
 La version portable consiste à copier les fichiers fournis par SOS-Paris.
 
-== Commandes Arii ==
+## Commandes Arii
 
 On part du principe qu'Arii portable est dans \ARII.
- cd \ARII
+```cd \ARII
+```
 puis lancer la commande arii
- arii
+```arii
 
  =========================
     _____        .__/\.__
@@ -75,11 +67,12 @@ puis lancer la commande arii
    stop_scheduler   Arret du serveur en mode cluster
    stop_agent       Arret des agents en mode workload
    purge            Nettoyage des logs et des caches 
+```
 
- == Vérification ==
+ ## Vérification
  
  La commande check liste les versions de chaque composant.
-  arii check 
+```arii check 
 
  --------------------------------------------------
  CURL
@@ -141,23 +134,24 @@ puis lancer la commande arii
  dot - graphviz version 2.38.0 (20140413.2041)
  OK!
  --------------------------------------------------
+```
 
-= Utilisation =
+# Utilisation
 
-== Démarrage ==
+## Démarrage
 
 Pour démarrer la partie LAMP:
  arii start
 
-== Connexion ==
+## Connexion
 
-== Arrêt ==
+## Arrêt
 
 = Maintenance =
 
 Quelques commandes pour les situations particulières.
 
-== Purge ==
+## Purge
 
 La purge supprime tous les fichiers temporaires, elle est nécessaire si:
 * l'espace disque manque
@@ -176,7 +170,7 @@ Il est conseillé de faire un arii stop pour éviter que de nouveaux logs se cr�
  C:\arii\jobscheduler\agent1\logs
  C:\arii\jobscheduler\agent2\logs
 
-== Mise à jour ==
+## Mise à jour
 
 La mise à jour est exécutée par '''arii update''':
  arii update 
@@ -222,7 +216,7 @@ La mise à jour est exécutée par '''arii update''':
  Updating database schema...
  Database schema updated successfully! "1" queries were executed
 
-== Déplacement ==
+## Déplacement
 
 Si le répertoire initial est renommé ou si le contenu est déplacé, il est nécessaire de refaire les liens web de symfony avec les bundles. 
 
@@ -254,7 +248,7 @@ Il suffit simplement de lancer un arii assets.
 
 Le rafraîchissement du navigateur suffira à retrouver les images.
 
-== Dump ==
+## Dump
 
 Il est utile de sauvegarder régulièrement ses bases de données en cas de corruption par la commande '''arii dump'''.
 
@@ -266,7 +260,7 @@ Attention! le serveur mysql doit être démarré, si ce n'est pas le cas, il fau
    ARII: C:\arii2\dump\arii.sql
    SCHEDULER: C:\arii2\dump\scheduler.sql
 
-== ZIP ==
+## ZIP
 
 Pour déplacer la clé, il peut être utile de la zipper, '''arii zip''' exécute les actions suivantes:
 * Arrêt des serveurs Apache et Mysql
