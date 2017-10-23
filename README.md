@@ -29,50 +29,53 @@ La version portable consiste à copier les fichiers fournis par SOS-Paris.
 ## Commandes Arii
 
 On part du principe qu'Arii portable est dans \ARII.
-```cd \ARII
+```
+cd \ARII
 ```
 puis lancer la commande arii
-```arii
+```
+arii
 
- =========================
-    _____        .__/\.__
-   /  _  \_______!__)/!__!
-  /  /_\  \_  __ \  ! !  !
- /    !    \  ! \/  ! !  !
- \____!__  /__!  !__! !__!
-         \/
- =========================
- Configuration
- -------------
-   IP:  localhost
-   WEB: 80
-   OSJ: 44444
- Environnement
- -------------
-   ROOT:  C:\ARII\
-   TOOLS: C:\ARII\tools
-   XAMPP: C:\ARII\xampp
- --------------------------------------------------
- Options:
-   check            Liste les version des comopsants
-   install          Installation de symfony
-   config           Configuration de Symfony Arii Edition (Schema, Utilisateurs)
-   update           Mise a jour de Symfony
-   start            Demarrage Base de donnees + Serveur web
-   start_supervisor Demarrage du superviseur
-   start_scheduler  Demarrage du serveur en mode cluster
-   start_agent      Demarrage des agents en mode workload
-   stop             Arret Base de donnees + Serveur web
-   stop_supervisor  Arret du superviseur
-   stop_scheduler   Arret du serveur en mode cluster
-   stop_agent       Arret des agents en mode workload
-   purge            Nettoyage des logs et des caches 
+=========================
+   _____        .__/\.__
+  /  _  \_______!__)/!__!
+ /  /_\  \_  __ \  ! !  !
+/    !    \  ! \/  ! !  !
+\____!__  /__!  !__! !__!
+        \/
+=========================
+Configuration
+-------------
+IP:  localhost
+WEB: 80
+OSJ: 44444
+Environnement
+-------------
+ROOT:  C:\ARII\
+TOOLS: C:\ARII\tools
+XAMPP: C:\ARII\xampp
+--------------------------------------------------
+Options:
+	check            Liste les version des comopsants
+	install          Installation de symfony
+	config           Configuration de Symfony Arii Edition (Schema, Utilisateurs)
+	update           Mise a jour de Symfony
+	start            Demarrage Base de donnees + Serveur web
+	start_supervisor Demarrage du superviseur
+	start_scheduler  Demarrage du serveur en mode cluster
+	start_agent      Demarrage des agents en mode workload
+	stop             Arret Base de donnees + Serveur web
+	stop_supervisor  Arret du superviseur
+	stop_scheduler   Arret du serveur en mode cluster
+	stop_agent       Arret des agents en mode workload
+	purge            Nettoyage des logs et des caches 
 ```
 
  ## Vérification
  
  La commande check liste les versions de chaque composant.
-```arii check 
+```
+arii check 
 
  --------------------------------------------------
  CURL
@@ -141,13 +144,15 @@ puis lancer la commande arii
 ## Démarrage
 
 Pour démarrer la partie LAMP:
- arii start
+```
+arii start
+```
 
 ## Connexion
 
 ## Arrêt
 
-= Maintenance =
+# Maintenance
 
 Quelques commandes pour les situations particulières.
 
@@ -158,17 +163,18 @@ La purge supprime tous les fichiers temporaires, elle est nécessaire si:
 * on souhaite déplacer l'arborescence
 * on veut créer une nouvelle archive
 Il est conseillé de faire un arii stop pour éviter que de nouveaux logs se créent pendant la purge.
- arii purge
+```
+arii purge
 
- -PURGE--------------------------------------------
- C:\arii\xampp\apache\logs
- C:\arii\symfony\app\logs
- C:\arii\symfony\app\cache\dev
- C:\arii\symfony\app\cache\prod
- C:\arii\tmp
- C:\arii\jobscheduler\arii\logs
- C:\arii\jobscheduler\agent1\logs
- C:\arii\jobscheduler\agent2\logs
+-PURGE--------------------------------------------
+C:\arii\xampp\apache\logs
+C:\arii\symfony\app\logs
+C:\arii\symfony\app\cache\dev
+C:\arii\symfony\app\cache\prod
+C:\arii\tmp
+C:\arii\jobscheduler\arii\logs
+C:\arii\jobscheduler\agent1\logs
+C:\arii\jobscheduler\agent2\logs
 
 ## Mise à jour
 
@@ -223,8 +229,8 @@ Si le répertoire initial est renommé ou si le contenu est déplacé, il est n�
 La perte d'image sur le portail est caractéristi de ce type de situation. 
 
 Il suffit simplement de lancer un arii assets.
-
- arii assets
+```
+arii assets
 
  --------------------------------------------------
  -ASSETS-------------------------------------------
@@ -302,3 +308,4 @@ Pour déplacer la clé, il peut être utile de la zipper, '''arii zip''' exécut
  Files read from disk: 48429
  Archive size: 826934676 bytes (789 MiB)
  Everything is Ok
+```
