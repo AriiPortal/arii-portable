@@ -231,6 +231,7 @@ Si le répertoire initial est renommé ou si le contenu est déplacé, il est n�
 La perte d'image sur le portail est caractéristi de ce type de situation. 
 
 Il suffit simplement de lancer un arii assets.
+
 ```
 arii assets
 
