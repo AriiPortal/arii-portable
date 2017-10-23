@@ -1,6 +1,7 @@
 Une version portable Windows permet d'utiliser Ari'i à partir d'une clé USB sur n'importe quelle plateforme Windows. La construction de cette installation est documentée pas à pas dans  [[Version Windows portable]].
 
 La structure de la suivante:
+```
  ARII
    Tools
      7z
@@ -19,6 +20,7 @@ La structure de la suivante:
    symfony
    tmp
    dump
+```
 
 # Installation
 
