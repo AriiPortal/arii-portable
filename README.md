@@ -179,6 +179,7 @@ C:\arii\jobscheduler\agent2\logs
 ## Mise à jour
 
 La mise à jour est exécutée par '''arii update''':
+
 ```
 arii update 
 
