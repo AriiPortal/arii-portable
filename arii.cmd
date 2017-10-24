@@ -1,5 +1,4 @@
 echo off
-if "%ALLREADY_INIT%"=="1" goto ALLREADY_INIT
 echo =========================
 echo    _____        .__/\.__ 
 echo   /  _  \_______!__)/!__!
