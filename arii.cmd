@@ -276,4 +276,10 @@ cd ..
 7z a -tzip ARII.zip %ROOT%*.* -r -mx9
 goto end
 
+:download
+echo -DOWNLOAD----------------------------------------
+php -r "copy('https://git-scm.com/download/win/PortableGit-2.14.1-32-bit.7z.exe', 'PortableGit-2.14.1-32-bit.7z.exe');"
+
+
+
 :end
