@@ -8,7 +8,7 @@ echo /    !    \  ! \/  ! !  !
 echo \____!__  /__!  !__! !__!
 echo         \/               
 echo =========================
-title ARI'I, portail DevOps
+title ARII, portail DevOps
 
 echo Configuration
 echo -------------
@@ -46,6 +46,7 @@ rem Alias
 SET PHP_PEAR_BIN_DIR=%PHPDIR%
 SET PHP_PEAR_PHP_BIN=%PHPBIN%
 SET XAMPPPHPDIR=%PHPDIR%
+set %DOWNLOADS%=%ROOT%\downloads
 
 rem Pour la partie configuration apache\bin
 set _ROOT=%ROOT:\=/%
@@ -69,20 +70,22 @@ goto %1
 
 :help
 echo Options:
-echo   check            Liste les version des comopsants
-echo   install          Installation de symfony 
-echo   config           Configuration de Symfony Arii Edition (Schema, Utilisateurs)
-echo   update           Mise a jour de Symfony
-echo   start            Demarrage Base de donnees + Serveur web
-echo   start_supervisor Demarrage du superviseur
-echo   start_scheduler  Demarrage du serveur en mode cluster
-echo   start_agent      Demarrage des agents en mode workload
-echo   stop             Arret du serveur LAMP
-echo   stop_supervisor  Arret du superviseur
-echo   stop_scheduler   Arret du serveur en mode cluster
-echo   stop_agent       Arret des agents en mode workload
-echo   purge            Nettoyage des logs et des caches
-echo   assets           Refais les liens avec les images
+echo   check               Liste les version des comopsants
+echo   install             Installation de symfony 
+echo   config              Configuration de Symfony Arii Edition (Schema, Utilisateurs)
+echo   update              Mise a jour de Symfony
+echo   start               Demarrage Base de donnees + Serveur web
+echo   start_supervisor    Demarrage du superviseur
+echo   start_scheduler     Demarrage du serveur en mode cluster
+echo   start_agent         Demarrage des agents en mode workload
+echo   stop                Arret du serveur LAMP
+echo   stop_supervisor     Arret du superviseur
+echo   stop_scheduler      Arret du serveur en mode cluster
+echo   stop_agent          Arret des agents en mode workload
+echo   purge               Nettoyage des logs et des caches
+echo   assets              Refais les liens avec les images
+echo   xml_install         Genere le fichier XML pour l'installation silencieuse
+echo   install_supervisor  Installation du jobscheduler Supervisor
 goto end 
 
 :check
@@ -259,27 +262,130 @@ goto end
 :dump
 echo -DUMP---------------------------------------------
 if not exist %DUMPDIR% mkdir %DUMPDIR%
-mysqldump -u root --databases arii > %DUMPDIR%\arii.sql
+mysqldump -u root --databases arii > >> arii_install.xml %DUMPDIR%\arii.sql
 if %ERRORLEVEL% == 0 echo   ARII: %DUMPDIR%\arii.sql
-mysqldump -u root --databases scheduler > %DUMPDIR%\scheduler.sql
+mysqldump -u root --databases scheduler > >> arii_install.xml %DUMPDIR%\scheduler.sql
 if %ERRORLEVEL% == 0 echo   SCHEDULER: %DUMPDIR%\scheduler.sql
 goto end
 
 :zip
-set ALLREADY_INIT=1
-call arii stop
-call arii stop_supervisor
-call arii purge
 echo -ZIP---------------------------------------------
-set ALLREADY_INIT=0
+call :stop
+call :stop_supervisor
+call :purge
 cd ..
 7z a -tzip ARII.zip %ROOT%*.* -r -mx9
 goto end
 
 :download
 echo -DOWNLOAD----------------------------------------
-php -r "copy('https://git-scm.com/download/win/PortableGit-2.14.1-32-bit.7z.exe', 'PortableGit-2.14.1-32-bit.7z.exe');"
+if not exist %DOWNLOADS% mkdir %DOWNLOADS%
+pushd %DOWNLOADS%
+curl https://download.sos-berlin.com/JobScheduler.1.10/lts/jobscheduler_windows-x86.1.10.6.zip
+popd
+goto end
 
+:xml_install
+pushd %DOWNLOADS%\jobscheduler.1.10.6
+echo -SILENT INSTALL----------------------------------
+echo ^<?xml version="1.0" encoding="UTF-8" standalone="no"?^> > arii_install.xml
+echo ^<AutomatedInstallation langpack="eng"^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.UserInputPanel id="home"^> >> arii_install.xml
+echo         ^<userInput/^> >> arii_install.xml
+echo     ^</com.izforge.izpack.panels.UserInputPanel^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.UserInputPanel id="licences"^> >> arii_install.xml
+echo         ^<userInput^> >> arii_install.xml
+echo             ^<entry key="licenceOptions" value="GPL"/^> >> arii_install.xml
+echo             ^<entry key="licence" value=""/^> >> arii_install.xml
+echo         ^</userInput^> >> arii_install.xml
+echo     ^</com.izforge.izpack.panels.UserInputPanel^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.HTMLLicencePanel id="gpl_licence"/^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.HTMLLicencePanel id="commercial_licence"/^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.TargetPanel id="target"^> >> arii_install.xml
+echo         ^<installpath^>%ROOT%\jobscheduler^</installpath^> >> arii_install.xml
+echo     ^</com.izforge.izpack.panels.TargetPanel^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.UserPathPanel id="userpath"^> >> arii_install.xml
+echo         ^<UserPathPanelElement^>%ROOT%\jobscheduler^</UserPathPanelElement^> >> arii_install.xml
+echo     ^</com.izforge.izpack.panels.UserPathPanel^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.PacksPanel id="package"^> >> arii_install.xml
+echo         ^<pack index="0" name="Job Scheduler" selected="true"/^> >> arii_install.xml
+echo         ^<pack index="2" name="Database Support" selected="true"/^> >> arii_install.xml
+echo         ^<pack index="5" name="Housekeeping Jobs" selected="true"/^> >> arii_install.xml
+echo     ^</com.izforge.izpack.panels.PacksPanel^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.UserInputPanel id="network"^> >> arii_install.xml
+echo         ^<userInput^> >> arii_install.xml
+echo             ^<entry key="schedulerHost" value="%IP%"/^> >> arii_install.xml
+echo             ^<entry key="schedulerPort" value="44444"/^> >> arii_install.xml
+echo             ^<entry key="jettyHTTPPort" value="40444"/^> >> arii_install.xml
+echo             ^<entry key="jettyHTTPSPort" value="48444"/^> >> arii_install.xml
+echo             ^<entry key="schedulerId" value="arii"/^> >> arii_install.xml
+echo             ^<entry key="schedulerAllowedHost" value="localhost"/^> >> arii_install.xml
+echo             ^<entry key="launchScheduler" value="yes"/^> >> arii_install.xml
+echo         ^</userInput^> >> arii_install.xml
+echo     ^</com.izforge.izpack.panels.UserInputPanel^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.UserInputPanel id="cluster"^> >> arii_install.xml
+echo         ^<userInput^> >> arii_install.xml
+echo             ^<entry key="clusterOptions" value=""/^> >> arii_install.xml
+echo         ^</userInput^> >> arii_install.xml
+echo     ^</com.izforge.izpack.panels.UserInputPanel^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.UserInputPanel id="smtp"^> >> arii_install.xml
+echo         ^<userInput^> >> arii_install.xml
+echo             ^<entry key="mailServer" value=""/^> >> arii_install.xml
+echo             ^<entry key="mailPort" value="25"/^> >> arii_install.xml
+echo             ^<entry key="smtpAccount" value=""/^> >> arii_install.xml
+echo             ^<entry key="smtpPass" value=""/^> >> arii_install.xml
+echo             ^<entry key="mailFrom" value=""/^> >> arii_install.xml
+echo             ^<entry key="mailTo" value=""/^> >> arii_install.xml
+echo             ^<entry key="mailCc" value=""/^> >> arii_install.xml
+echo             ^<entry key="mailBcc" value=""/^> >> arii_install.xml
+echo         ^</userInput^> >> arii_install.xml
+echo     ^</com.izforge.izpack.panels.UserInputPanel^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.UserInputPanel id="email"^> >> arii_install.xml
+echo         ^<userInput^> >> arii_install.xml
+echo             ^<entry key="mailOnError" value="yes"/^> >> arii_install.xml
+echo             ^<entry key="mailOnWarning" value="yes"/^> >> arii_install.xml
+echo             ^<entry key="mailOnSuccess" value="no"/^> >> arii_install.xml
+echo             ^<entry key="jobEvents" value="off"/^> >> arii_install.xml 
+echo         ^</userInput^> >> arii_install.xml
+echo     ^</com.izforge.izpack.panels.UserInputPanel^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.UserInputPanel id="database"^> >> arii_install.xml
+echo         ^<userInput^> >> arii_install.xml
+echo             ^<entry key="databaseDbms" value="mysql"/^> >> arii_install.xml
+echo             ^<entry key="databaseCreate" value="on"/^> >> arii_install.xml
+echo         ^</userInput^> >> arii_install.xml
+echo     ^</com.izforge.izpack.panels.UserInputPanel^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.UserInputPanel id="dbconnection"^> >> arii_install.xml
+echo         ^<userInput^> >> arii_install.xml
+echo             ^<entry key="databaseHost" value="%IP%"/^> >> arii_install.xml
+echo             ^<entry key="databasePort" value="3306"/^> >> arii_install.xml
+echo             ^<entry key="databaseSchema" value="arii"/^> >> arii_install.xml
+echo             ^<entry key="databaseUser" value="root"/^> >> arii_install.xml
+echo             ^<entry key="databasePassword" value=""/^> >> arii_install.xml                
+echo             ^<entry key="connectorJTDS" value="yes"/^> >> arii_install.xml
+echo             ^<entry key="connectorMaria" value="yes"/^> >> arii_install.xml
+echo         ^</userInput^> >> arii_install.xml
+echo     ^</com.izforge.izpack.panels.UserInputPanel^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.UserInputPanel id="jdbc"^> >> arii_install.xml
+echo         ^<userInput^> >> arii_install.xml
+echo             ^<entry key="connector" value=""/^> >> arii_install.xml
+echo             ^<entry key="connectorLicense" value=""/^> >> arii_install.xml
+echo         ^</userInput^> >> arii_install.xml
+echo     ^</com.izforge.izpack.panels.UserInputPanel^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.UserInputPanel id="end"^> >> arii_install.xml
+echo         ^<userInput/^> >> arii_install.xml
+echo     ^</com.izforge.izpack.panels.UserInputPanel^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.InstallPanel id="install"/^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.ProcessPanel id="process"/^> >> arii_install.xml
+echo     ^<com.izforge.izpack.panels.FinishPanel id="finish"/^> >> arii_install.xml
+echo ^</AutomatedInstallation^> >> arii_install.xml
+popd
+goto end
 
+:supervisor_install
+call :xml_install
+pushd %DOWNLOADS%\jobscheduler.1.10.6
+"%JRE_HOME%\java.exe" -jar "%~dp0jobscheduler_windows-x86.1.10.6.jar" arii_install.xml
+popd
+goto end
 
 :end
