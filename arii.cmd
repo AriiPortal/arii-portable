@@ -45,7 +45,7 @@ rem Alias
 SET PHP_PEAR_BIN_DIR=%PHPDIR%
 SET PHP_PEAR_PHP_BIN=%PHPBIN%
 SET XAMPPPHPDIR=%PHPDIR%
-set %DOWNLOADS%=%ROOT%\downloads
+set DOWNLOADS=%ROOT%\downloads
 
 rem Pour la partie configuration apache\bin
 set _ROOT=%ROOT:\=/%
@@ -133,14 +133,21 @@ goto end
 :install
 echo -CLONE--------------------------------------------
 git clone https://github.com/AriiPortal/symfony-arii-edition symfony
-if %ERRORLEVEL% == 0 goto install_symfony
+if %ERRORLEVEL% == 0 pushd %SYMFONY%
+goto :install_symfony
 goto end
 
 :install_symfony
 echo -INSTALL------------------------------------------
-pushd %SYMFONY%
 php %TOOLS%\composer\composer.phar install
-if %ERRORLEVEL% == 0 goto create_users
+if %ERRORLEVEL% == 0  goto :create_db
+popd
+goto end 
+
+:create_db
+echo -CREATE-DB----------------------------------------
+php app/console doctrine:schema:create
+if %ERRORLEVEL% == 0 goto :create_users
 popd
 goto end
 
@@ -148,6 +155,7 @@ goto end
 echo -CREATE-USERS-------------------------------------
 php app/console arii:user:create admin admin@localhost admin admin admin
 php app/console arii:user:create operator operator@localhost operator operator operator
+if %ERRORLEVEL% == 0 goto :assets
 popd
 goto end
 
@@ -166,17 +174,8 @@ php app/console doctrine:schema:update --force
 popd
 goto end
 
-:config
-echo -CONFIG-------------------------------------------
-pushd %SYMFONY%
-php app/console doctrine:schema:create
-if %ERRORLEVEL% == 0 goto assets
-popd
-goto end
-
 :assets
 echo -ASSETS-------------------------------------------
-pushd %SYMFONY%
 php app/console assets:install
 popd
 goto end
@@ -280,7 +279,9 @@ goto end
 echo -DOWNLOAD----------------------------------------
 if not exist %DOWNLOADS% mkdir %DOWNLOADS%
 pushd %DOWNLOADS%
-curl https://download.sos-berlin.com/JobScheduler.1.10/lts/jobscheduler_windows-x86.1.10.6.zip
+#curl https://download.sos-berlin.com/JobScheduler.1.10/lts/jobscheduler_windows-x86.1.10.6.zip
+curl https://sourceforge.net/projects/jobscheduler/files/JobScheduler.1.10/JobScheduler.1.10.6/jobscheduler_windows-x86.1.10.6.zip
+7z x "%DOWNLOADS%\jobscheduler_windows-x86.1.10.6.zip" -o"%DOWNLOADS%\" -r
 popd
 goto end
 
@@ -313,7 +314,7 @@ echo         ^<pack index="5" name="Housekeeping Jobs" selected="true"/^> >> ari
 echo     ^</com.izforge.izpack.panels.PacksPanel^> >> arii_install.xml
 echo     ^<com.izforge.izpack.panels.UserInputPanel id="network"^> >> arii_install.xml
 echo         ^<userInput^> >> arii_install.xml
-echo             ^<entry key="schedulerHost" value="%IP%"/^> >> arii_install.xml
+echo             ^<entry key="schedulerHost" value="localhost"/^> >> arii_install.xml
 echo             ^<entry key="schedulerPort" value="44444"/^> >> arii_install.xml
 echo             ^<entry key="jettyHTTPPort" value="40444"/^> >> arii_install.xml
 echo             ^<entry key="jettyHTTPSPort" value="48444"/^> >> arii_install.xml
