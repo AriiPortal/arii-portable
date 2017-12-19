@@ -63,7 +63,6 @@ set CAINFO = "%TOOLS%\curl\cacert.pem"
 echo --------------------------------------------------
 set PATH=%JAVA_HOME%\bin;%JAVA_HOME%\bin\client;%WINDIR%\system32;%PERL%\bin;%TOOLS%\7z;%TOOLS%\git\cmd;%TOOLS%\curl;%TOOLS%\graphviz\bin;%XAMPP%\php;%XAMPP%\apache\bin;%XAMPP%\mysql\bin
 
-:ALLREADY_INIT
 if "%1"=="" goto help
 goto %1
 
@@ -133,18 +132,18 @@ goto end
 :install
 echo -CLONE--------------------------------------------
 git clone https://github.com/AriiPortal/symfony-arii-edition symfony
-if %ERRORLEVEL% == 0 pushd %SYMFONY%
-goto :install_symfony
+if %ERRORLEVEL% == 0 goto :install_symfony
 goto end
 
 :install_symfony
-echo -INSTALL------------------------------------------
+echo -INSTALL-SYMFONY----------------------------------
+pushd %SYMFONY%
 php %TOOLS%\composer\composer.phar install
-if %ERRORLEVEL% == 0  goto :create_db
+if %ERRORLEVEL% == 0  goto :install_arii
 popd
 goto end 
 
-:create_db
+:config
 echo -CREATE-DB----------------------------------------
 php app/console doctrine:schema:create
 if %ERRORLEVEL% == 0 goto :create_users
@@ -202,8 +201,9 @@ goto end
 
 :start
 echo -START--------------------------------------------
+if not exist %TMPDIR% mkdir %TMPDIR%
 start "MariaDB" %XAMPP%\mysql\bin\mysqld.exe --standalone --console
-start "APACHE" %XAMPP%\apache\bin\httpd.exe
+if exist %SYMFONY%\web start "APACHE" %XAMPP%\apache\bin\httpd.exe
 goto end
 
 :start_supervisor
