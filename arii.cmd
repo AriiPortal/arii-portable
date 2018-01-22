@@ -69,7 +69,8 @@ goto %1
 :help
 echo Options:
 echo   check               Liste les version des comopsants
-echo   install             Installation de symfony 
+echo   clone               Clone de symfony 
+echo   install             Installation de symfony par composer
 echo   config              Configuration de Symfony Arii Edition (Schema, Utilisateurs)
 echo   update              Mise a jour de Symfony
 echo   start               Demarrage Base de donnees + Serveur web
@@ -129,13 +130,13 @@ if %ERRORLEVEL%==0 echo OK!
 echo --------------------------------------------------
 goto end
 
-:install
+:clone
 echo -CLONE--------------------------------------------
 git clone https://github.com/AriiPortal/symfony-arii-edition symfony
 if %ERRORLEVEL% == 0 goto :install_symfony
 goto end
 
-:install_symfony
+:install
 echo -INSTALL-SYMFONY----------------------------------
 pushd %SYMFONY%
 php %TOOLS%\composer\composer.phar install
