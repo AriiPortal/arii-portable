@@ -69,8 +69,7 @@ goto %1
 :help
 echo Options:
 echo   check               Liste les version des comopsants
-echo   clone               Clone de symfony 
-echo   install             Installation de symfony par composer
+echo   install             Installation de symfony 
 echo   config              Configuration de Symfony Arii Edition (Schema, Utilisateurs)
 echo   update              Mise a jour de Symfony
 echo   start               Demarrage Base de donnees + Serveur web
@@ -130,17 +129,21 @@ if %ERRORLEVEL%==0 echo OK!
 echo --------------------------------------------------
 goto end
 
-:clone
+:install
 echo -CLONE--------------------------------------------
 git clone https://github.com/AriiPortal/symfony-arii-edition symfony
+call :start
 if %ERRORLEVEL% == 0 goto :install_symfony
 goto end
 
-:install
+:install_symfony
 echo -INSTALL-SYMFONY----------------------------------
 pushd %SYMFONY%
 php %TOOLS%\composer\composer.phar install
-if %ERRORLEVEL% == 0  goto :install_arii
+rem :remplacer par config ie cr�ation de la DB, Schema et les utilisateurs 
+if %ERRORLEVEL% == 0  goto :update_db
+rem Lancement de l'installation du Superviseur ici 
+if %ERRORLEVEL% == 0  goto :install_supervisor
 popd
 goto end 
 
@@ -148,6 +151,7 @@ goto end
 echo -CREATE-DB----------------------------------------
 php app/console doctrine:schema:create
 if %ERRORLEVEL% == 0 goto :create_users
+rem if %ERRORLEVEL% == 0 goto :assets
 popd
 goto end
 
@@ -155,7 +159,7 @@ goto end
 echo -CREATE-USERS-------------------------------------
 php app/console arii:user:create admin admin@localhost admin admin admin
 php app/console arii:user:create operator operator@localhost operator operator operator
-if %ERRORLEVEL% == 0 goto :assets
+rem if %ERRORLEVEL% == 0 goto :assets
 popd
 goto end
 
@@ -171,6 +175,14 @@ goto end
 :update_db
 echo -UPDATE-DB----------------------------------------
 php app/console doctrine:schema:update --force
+if %ERRORLEVEL% == 0 goto :install_assets
+popd
+goto end
+
+:install_assets
+echo -ASSETS-------------------------------------------
+php app/console assets:install
+if %ERRORLEVEL% == 0 goto :install_supervisor
 popd
 goto end
 
@@ -286,6 +298,14 @@ curl https://sourceforge.net/projects/jobscheduler/files/JobScheduler.1.10/JobSc
 popd
 goto end
 
+:install_supervisor
+call :xml_install
+pushd %DOWNLOADS%\jobscheduler.1.10.6
+rem "%JRE_HOME%\java.exe" -jar "%~dp0jobscheduler_windows-x86.1.10.6.jar" arii_install.xml
+"%JRE_HOME%\java.exe" -jar jobscheduler_windows-x86.1.10.6.jar arii_install.xml
+popd
+goto end
+
 :xml_install
 pushd %DOWNLOADS%\jobscheduler.1.10.6
 echo -SILENT INSTALL----------------------------------
@@ -320,7 +340,7 @@ echo             ^<entry key="schedulerPort" value="44444"/^> >> arii_install.xm
 echo             ^<entry key="jettyHTTPPort" value="40444"/^> >> arii_install.xml
 echo             ^<entry key="jettyHTTPSPort" value="48444"/^> >> arii_install.xml
 echo             ^<entry key="schedulerId" value="arii"/^> >> arii_install.xml
-echo             ^<entry key="schedulerAllowedHost" value="localhost"/^> >> arii_install.xml
+echo             ^<entry key="schedulerAllowedHost" value="0.0.0.0"/^> >> arii_install.xml
 echo             ^<entry key="launchScheduler" value="yes"/^> >> arii_install.xml
 echo         ^</userInput^> >> arii_install.xml
 echo     ^</com.izforge.izpack.panels.UserInputPanel^> >> arii_install.xml
@@ -357,7 +377,7 @@ echo         ^</userInput^> >> arii_install.xml
 echo     ^</com.izforge.izpack.panels.UserInputPanel^> >> arii_install.xml
 echo     ^<com.izforge.izpack.panels.UserInputPanel id="dbconnection"^> >> arii_install.xml
 echo         ^<userInput^> >> arii_install.xml
-echo             ^<entry key="databaseHost" value="%IP%"/^> >> arii_install.xml
+echo             ^<entry key="databaseHost" value="localhost"/^> >> arii_install.xml
 echo             ^<entry key="databasePort" value="3306"/^> >> arii_install.xml
 echo             ^<entry key="databaseSchema" value="arii"/^> >> arii_install.xml
 echo             ^<entry key="databaseUser" value="root"/^> >> arii_install.xml
@@ -382,13 +402,4 @@ echo ^</AutomatedInstallation^> >> arii_install.xml
 popd
 goto end
 
-:supervisor_install
-call :xml_install
-pushd %DOWNLOADS%\jobscheduler.1.10.6
-"%JRE_HOME%\java.exe" -jar "%~dp0jobscheduler_windows-x86.1.10.6.jar" arii_install.xml
-popd
-goto end
-
 :end
-
-rem Historique
