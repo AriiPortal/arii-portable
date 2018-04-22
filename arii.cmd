@@ -158,6 +158,7 @@ goto end
 :create_users
 echo -CREATE-USERS-------------------------------------
 php app/console arii:user:create admin admin@localhost admin admin admin
+php app/console fos:user:promote admin ROLE_ADMIN
 php app/console arii:user:create operator operator@localhost operator operator operator
 rem if %ERRORLEVEL% == 0 goto :assets
 popd
