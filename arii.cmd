@@ -68,20 +68,18 @@ goto %1
 
 :help
 echo Options:
-echo   check               Liste les version des comopsants
+echo   check               Initialise les variables, affiche les versions des composants
 echo   install             Installation de symfony 
 echo   config              Configuration de Symfony Arii Edition (Schema, Utilisateurs)
 echo   update              Mise a jour de Symfony
-echo   start               Demarrage Base de donnees + Serveur web
+echo   start               Demarrage de Arii : Base de donnees + Serveur web
 echo   start_supervisor    Demarrage du superviseur
 echo   start_scheduler     Demarrage du serveur en mode cluster
-echo   start_agent         Demarrage des agents en mode workload
-echo   stop                Arret du serveur LAMP
+echo   stop                Arret de Arii : serveur LAMP
 echo   stop_supervisor     Arret du superviseur
 echo   stop_scheduler      Arret du serveur en mode cluster
-echo   stop_agent          Arret des agents en mode workload
 echo   purge               Nettoyage des logs et des caches
-echo   assets              Refais les liens avec les images
+echo   assets              Refait les liens avec les images
 echo   xml_install         Genere le fichier XML pour l'installation silencieuse
 echo   install_supervisor  Installation du jobscheduler Supervisor
 goto end 
@@ -404,3 +402,5 @@ popd
 goto end
 
 :end
+echo Vous pouvez ouvrir Arii en naviguant vers cette adresse : http://%IP%/login
+
