@@ -301,7 +301,14 @@ goto end
 call :xml_install
 pushd %DOWNLOADS%\jobscheduler.1.10.6
 rem "%JRE_HOME%\java.exe" -jar "%~dp0jobscheduler_windows-x86.1.10.6.jar" arii_install.xml
+echo "Demarrer l'installation du Supervisor"
 "%JRE_HOME%\java.exe" -jar jobscheduler_windows-x86.1.10.6.jar arii_install.xml
+pause
+pushd %OSJDIR%\arii\config
+if not exist .\map.pl curl http://www.sos-paris.com/download/map.pl -o .\map.pl
+perl map.pl factory.ini scheduler.xml
+pushd %OSJDIR%\arii\bin
+start "SUPERVISOR" %OSJDIR%\arii\bin\jobscheduler debug
 popd
 goto end
 
@@ -340,7 +347,7 @@ echo             ^<entry key="jettyHTTPPort" value="40444"/^> >> arii_install.xm
 echo             ^<entry key="jettyHTTPSPort" value="48444"/^> >> arii_install.xml
 echo             ^<entry key="schedulerId" value="arii"/^> >> arii_install.xml
 echo             ^<entry key="schedulerAllowedHost" value="0.0.0.0"/^> >> arii_install.xml
-echo             ^<entry key="launchScheduler" value="yes"/^> >> arii_install.xml
+echo             ^<entry key="launchScheduler" value="no"/^> >> arii_install.xml
 echo         ^</userInput^> >> arii_install.xml
 echo     ^</com.izforge.izpack.panels.UserInputPanel^> >> arii_install.xml
 echo     ^<com.izforge.izpack.panels.UserInputPanel id="cluster"^> >> arii_install.xml
@@ -399,7 +406,7 @@ echo     ^<com.izforge.izpack.panels.ProcessPanel id="process"/^> >> arii_instal
 echo     ^<com.izforge.izpack.panels.FinishPanel id="finish"/^> >> arii_install.xml
 echo ^</AutomatedInstallation^> >> arii_install.xml
 popd
-goto end
+rem goto end
 
 :end
 echo Vous pouvez ouvrir Arii en naviguant vers cette adresse : http://%IP%/login
