@@ -1,4 +1,5 @@
-Une version portable Windows permet d'utiliser Ari'i à partir d'une clé USB sur n'importe quelle plateforme Windows.
+Une version portable Windows permet d'utiliser Arii sur n'importe quelle plateforme Windows.
+Une procédure détaillées est présentée sur cette page : http://wiki.sos-paris.com/index.php/Arii_sur_windows_en_15_minutes
 
 La structure de la suivante:
 ```
